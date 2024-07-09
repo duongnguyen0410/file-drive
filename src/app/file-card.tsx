@@ -28,8 +28,15 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-import { DeleteIcon, MoreVertical, TrashIcon } from "lucide-react";
-import { useState } from "react";
+import {
+  DeleteIcon,
+  FileTextIcon,
+  GanttChartIcon,
+  ImageIcon,
+  MoreVertical,
+  TrashIcon,
+} from "lucide-react";
+import { ReactNode, useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useToast } from "@/components/ui/use-toast";
@@ -57,10 +64,10 @@ function FileCardActions({ file }: { file: Doc<"files"> }) {
                   fileId: file._id,
                 });
                 toast({
-                    variant: "success",
-                    title: "File deleted",
-                    description: "Your file is now gone from the system"
-                })
+                  variant: "default",
+                  title: "File deleted",
+                  description: "Your file is now gone from the system",
+                });
               }}
             >
               Continue
@@ -71,7 +78,7 @@ function FileCardActions({ file }: { file: Doc<"files"> }) {
 
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <MoreVertical />
+          <MoreVertical className="w-5 h-5"/>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem
@@ -87,18 +94,25 @@ function FileCardActions({ file }: { file: Doc<"files"> }) {
 }
 
 export function FileCard({ file }: { file: Doc<"files"> }) {
+  const typeIcons = {
+    image: <ImageIcon />,
+    pdf: <FileTextIcon />,
+    csv: <GanttChartIcon />,
+  } as Record<Doc<"files">["type"], ReactNode>;
+
   return (
     <Card>
       <CardHeader className="relative">
-        <CardTitle>{file.name}</CardTitle>
-        <div className="absolute top-1 right-1">
+        <CardTitle className="flex gap-2">
+          <div className="flex justify-center">{typeIcons[file.type]}</div>{" "}
+          {file.name}
+        </CardTitle>
+        <div className="absolute top-2 right-2">
           <FileCardActions file={file} />
         </div>
         {/* <CardDescription>Card Description</CardDescription> */}
       </CardHeader>
-      <CardContent>
-        <p>Card Content</p>
-      </CardContent>
+      <CardContent></CardContent>
       <CardFooter>
         <Button>Download</Button>
       </CardFooter>

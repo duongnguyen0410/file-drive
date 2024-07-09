@@ -36,6 +36,10 @@ const config = {
           DEFAULT: "hsl(var(--success))",
           foreground: "hsl(var(--success-foreground))",
         },
+        delete: {
+          DEFAULT: "hsl(var(--delete))",
+          foreground: "hsl(var(--delete-foreground))",
+        },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
