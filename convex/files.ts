@@ -62,6 +62,7 @@ export const createFile = mutation({
 export const getFiles = query({
   args: {
     orgId: v.string(),
+    query: v.optional(v.string())
   },
   async handler(ctx, args) {
     const identity = await ctx.auth.getUserIdentity();
@@ -91,7 +92,13 @@ export const getFiles = query({
       }))
     );
 
-    return foundFiles;
+    const query = args.query;
+
+    if (query) {
+      return foundFiles.filter((file) => file.name.includes(query))
+    } else {
+      return foundFiles;
+    }
   },
 });
 
