@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Doc } from "../../convex/_generated/dataModel";
+import { Doc, Id } from "../../convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -37,9 +37,10 @@ import {
   TrashIcon,
 } from "lucide-react";
 import { ReactNode, useState } from "react";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useToast } from "@/components/ui/use-toast";
+import Image from "next/image";
 
 function FileCardActions({ file }: { file: Doc<"files"> }) {
   const deleteFile = useMutation(api.files.deleteFile);
@@ -78,7 +79,7 @@ function FileCardActions({ file }: { file: Doc<"files"> }) {
 
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <MoreVertical className="w-5 h-5"/>
+          <MoreVertical className="w-5 h-5" />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem
@@ -112,9 +113,22 @@ export function FileCard({ file }: { file: Doc<"files"> }) {
         </div>
         {/* <CardDescription>Card Description</CardDescription> */}
       </CardHeader>
-      <CardContent></CardContent>
-      <CardFooter>
-        <Button>Download</Button>
+      <CardContent className="h-[250px] flex justify-center items-center">
+        {file.type === "image" && (
+          <Image alt={file.name} width="200" height="100" src={file.url} />
+        )}
+
+        {file.type === "csv" && <GanttChartIcon className="w-20 h-20" />}
+        {file.type === "pdf" && <FileTextIcon className="w-20 h-20" />}
+      </CardContent>
+      <CardFooter className="flex justify-center">
+        <Button
+          onClick={() => {
+            window.open(file.url, "_blank");
+          }}
+        >
+          Download
+        </Button>
       </CardFooter>
     </Card>
   );

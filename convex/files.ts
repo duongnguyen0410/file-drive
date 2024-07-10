@@ -79,10 +79,19 @@ export const getFiles = query({
       return [];
     }
 
-    return ctx.db
+    let files = await ctx.db
       .query("files")
       .withIndex("by_orgId", (q) => q.eq("orgId", args.orgId))
       .collect();
+
+    const foundFiles = await Promise.all(
+      files.map(async (file) => ({
+        ...file,
+        url: await ctx.storage.getUrl(file.fileId),
+      }))
+    );
+
+    return foundFiles;
   },
 });
 
@@ -95,10 +104,10 @@ export const deleteFile = mutation({
       throw new ConvexError("You must be logged in to upload a file");
     }
 
-    const file = await ctx.db.get(args.fileId)
+    const file = await ctx.db.get(args.fileId);
 
     if (!file) {
-      throw new ConvexError("This file does not exist")
+      throw new ConvexError("This file does not exist");
     }
 
     const hasAccess = await hasAccessToOrg(
@@ -110,7 +119,7 @@ export const deleteFile = mutation({
     if (!hasAccess) {
       throw new ConvexError("You do not have access to delete this file");
     }
-    
-    await ctx.db.delete(args.fileId)
+
+    await ctx.db.delete(args.fileId);
   },
 });
