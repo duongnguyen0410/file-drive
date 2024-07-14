@@ -4,7 +4,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -28,12 +27,12 @@ export function SearchBar({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      query: "",
+      query,
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setQuery(values.query)
+    setQuery(values.query);
   }
 
   return (
@@ -56,6 +55,7 @@ export function SearchBar({
             )}
           />
           <Button
+            size="sm"
             type="submit"
             disabled={form.formState.isSubmitting}
             className="flex gap-1"

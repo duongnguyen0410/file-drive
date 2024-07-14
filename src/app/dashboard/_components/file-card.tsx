@@ -1,19 +1,16 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Doc, Id } from "../../convex/_generated/dataModel";
+import { Doc } from "../../../../convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -25,11 +22,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
 import {
-  DeleteIcon,
   FileTextIcon,
   GanttChartIcon,
   ImageIcon,
@@ -37,8 +32,8 @@ import {
   TrashIcon,
 } from "lucide-react";
 import { ReactNode, useState } from "react";
-import { useMutation, useQuery } from "convex/react";
-import { api } from "../../convex/_generated/api";
+import { useMutation } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
 import { useToast } from "@/components/ui/use-toast";
 import Image from "next/image";
 

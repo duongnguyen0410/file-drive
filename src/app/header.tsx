@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { OrganizationSwitcher, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
-import Image from "next/image";
 
 export function Header() {
   return (
