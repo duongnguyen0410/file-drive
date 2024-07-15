@@ -39,6 +39,7 @@ import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { useToast } from "@/components/ui/use-toast";
 import Image from "next/image";
+import { Protect } from "@clerk/nextjs";
 
 function FileCardActions({
   file,
@@ -98,23 +99,25 @@ function FileCardActions({
             className="flex gap-1 items-center cursor-pointer "
           >
             {isFavorited ? (
-              <div className="flex gap-1 items-center">
-                <StarIcon fill="black" className="w-4 h-4 text-black" /> Unfavorite
+              <div className="flex gap-2 items-center">
+                <StarIcon fill="black" className="w-4 h-4 text-black" />{" "}
+                Unfavorite
               </div>
             ) : (
-              <div className="flex gap-1 items-center">
+              <div className="flex gap-2 items-center">
                 <StarIcon className="w-4 h-4" /> Favorite
               </div>
             )}
-            
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => setIsConfirmOpen(true)}
-            className="flex gap-1 text-red-600 focus:text-red-600 items-center cursor-pointer"
-          >
-            <TrashIcon className="w-4 h-4" /> Delete
-          </DropdownMenuItem>
+          {/* <Protect role={"org:admin"} fallback={<></>}> */}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => setIsConfirmOpen(true)}
+              className="flex gap-2 items-center text-red-600 focus:text-red-600 cursor-pointer"
+            >
+              <TrashIcon className="w-4 h-4" /> Delete
+            </DropdownMenuItem>
+          {/* </Protect> */}
         </DropdownMenuContent>
       </DropdownMenu>
     </>
@@ -150,13 +153,13 @@ export function FileCard({
         </div>
         {/* <CardDescription>Card Description</CardDescription> */}
       </CardHeader>
-      <CardContent className="h-[250px] flex justify-center items-center">
+      <CardContent className="h-[200px] flex justify-center items-center">
         {file.type === "image" && (
-          <Image alt={file.name} width="200" height="100" src={file.url} />
+          <Image alt={file.name} width="130" height="100" src={file.url} />
         )}
 
-        {file.type === "csv" && <GanttChartIcon className="w-20 h-20" />}
-        {file.type === "pdf" && <FileTextIcon className="w-20 h-20" />}
+        {file.type === "csv" && <GanttChartIcon className="w-10 h-10" />}
+        {file.type === "pdf" && <FileTextIcon className="w-10 h-10" />}
       </CardContent>
       <CardFooter className="flex justify-center">
         <Button
