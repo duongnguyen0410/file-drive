@@ -26,16 +26,16 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import {
+  ArchiveRestore,
   FileTextIcon,
   GanttChartIcon,
   ImageIcon,
   MoreVertical,
-  StarHalf,
   StarIcon,
-  TrashIcon,
+  Trash2Icon,
 } from "lucide-react";
-import { ReactNode, useState } from "react";
-import { useMutation } from "convex/react";
+import { ReactNode, use, useState } from "react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { useToast } from "@/components/ui/use-toast";
 import Image from "next/image";
@@ -49,7 +49,11 @@ function FileCardActions({
   isFavorited: boolean;
 }) {
   const deleteFile = useMutation(api.files.deleteFile);
+  const restoreFile = useMutation(api.files.restoreFile);
   const toggleFavorite = useMutation(api.files.toggleFavorite);
+  const userProfile = useQuery(api.users.getUserProfile, {
+    userId: file.userId,
+  });
 
   const { toast } = useToast();
 
@@ -61,8 +65,8 @@ function FileCardActions({
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
+              This action will mark the file for our deletion process. Files are
+              deleted peroidically.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -75,7 +79,7 @@ function FileCardActions({
                 toast({
                   variant: "default",
                   title: "File deleted",
-                  description: "Your file is now gone from the system",
+                  description: "Your file will be deleted soon",
                 });
               }}
             >
@@ -109,15 +113,28 @@ function FileCardActions({
               </div>
             )}
           </DropdownMenuItem>
-          {/* <Protect role={"org:admin"} fallback={<></>}> */}
+          <Protect role={"org:admin"} fallback={<></>}>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => setIsConfirmOpen(true)}
-              className="flex gap-2 items-center text-red-600 focus:text-red-600 cursor-pointer"
+              onClick={() => {
+                file.shouldDelete
+                  ? restoreFile({
+                      fileId: file._id,
+                    })
+                  : setIsConfirmOpen(true);
+              }}
             >
-              <TrashIcon className="w-4 h-4" /> Delete
+              {file.shouldDelete ? (
+                <div className="flex gap-2 items-center text-black cursor-pointer">
+                  <ArchiveRestore className="w-4 h-4" /> Restore
+                </div>
+              ) : (
+                <div className="flex gap-2 items-center text-red-600 focus:text-red-600 cursor-pointer">
+                  <Trash2Icon className="w-4 h-4" /> Delete
+                </div>
+              )}
             </DropdownMenuItem>
-          {/* </Protect> */}
+          </Protect>
         </DropdownMenuContent>
       </DropdownMenu>
     </>
@@ -155,7 +172,7 @@ export function FileCard({
       </CardHeader>
       <CardContent className="h-[200px] flex justify-center items-center">
         {file.type === "image" && (
-          <Image alt={file.name} width="130" height="100" src={file.url} />
+          <Image alt={file.name} width="200" height="100" src={file.url} />
         )}
 
         {file.type === "csv" && <GanttChartIcon className="w-10 h-10" />}
