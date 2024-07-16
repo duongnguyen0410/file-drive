@@ -26,7 +26,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2 } from "lucide-react";
+import { FilePlus2, Loader2 } from "lucide-react";
 import { Doc } from "../../../../convex/_generated/dataModel";
 
 const formSchema = z.object({
@@ -116,7 +116,9 @@ export function UploadButton() {
       }}
     >
       <DialogTrigger asChild>
-        <Button>Upload File</Button>
+        <Button className="flex gap-2 h-10 px-8 py-6" >
+          <FilePlus2 className="w-6 h-6" /> Upload File
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

@@ -3,12 +3,13 @@
 import { useOrganization, useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
-import { UploadButton } from "./upload-button";
 import { FileCard } from "./file-card";
 import Image from "next/image";
 import { Loader2 } from "lucide-react";
 import { SearchBar } from "./search-bar";
 import { useState } from "react";
+import { DataTable } from "@/app/dashboard/_components/file-table";
+import { columns } from "@/app/dashboard/_components/columns";
 
 function Placeholder() {
   return (
@@ -23,8 +24,6 @@ function Placeholder() {
       <div className="text-xl text-gray-400 mb-4">
         You have no files, upload one now
       </div>
-
-      <UploadButton />
     </div>
   );
 }
@@ -54,9 +53,22 @@ export function FileBrowser({
 
   const files = useQuery(
     api.files.getFiles,
-    orgId ? { orgId, query, favorites: favoritesOnly, delete: deleteOnly } : "skip"
+    orgId
+      ? { orgId, query, favorites: favoritesOnly, delete: deleteOnly }
+      : "skip"
   );
   const isLoading = files === undefined;
+
+  const modifiedFiles =
+    files?.map((file) => ({
+      ...file,
+      isFavorited: (favorites ?? []).some(
+        (favorite) => favorite.fileId === file._id
+      ),
+    })) ?? [];
+
+  console.log(files);
+  console.log(modifiedFiles);
 
   return (
     <div>
@@ -74,20 +86,15 @@ export function FileBrowser({
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-4xl font-bold">{title}</h1>
             <SearchBar query={query} setQuery={setQuery} />
-            <UploadButton />
           </div>
 
           {files.length === 0 && <Placeholder />}
 
+          <DataTable columns={columns} data={modifiedFiles} />
+
           <div className="grid grid-cols-3 gap-4">
-            {files?.map((file) => {
-              return (
-                <FileCard
-                  favorites={favorites ?? []}
-                  key={file._id}
-                  file={file}
-                />
-              );
+            {modifiedFiles?.map((file) => {
+              return <FileCard key={file._id} file={file} />;
             })}
           </div>
         </>
