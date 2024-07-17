@@ -4,7 +4,7 @@ export default function FavoritesPage() {
 
   return (
     <div>
-      <FileBrowser title="Favorites" deleteOnly />
+      <FileBrowser title="Trash" deleteOnly />
     </div>
   );
 }

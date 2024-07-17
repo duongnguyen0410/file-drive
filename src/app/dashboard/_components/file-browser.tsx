@@ -11,6 +11,14 @@ import { useState } from "react";
 import { DataTable } from "@/app/dashboard/_components/file-table";
 import { columns } from "@/app/dashboard/_components/columns";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Doc } from "../../../../convex/_generated/dataModel";
 
 function Placeholder() {
   return (
@@ -41,6 +49,7 @@ export function FileBrowser({
   const organization = useOrganization();
   const user = useUser();
   const [query, setQuery] = useState("");
+  const [type, setType] = useState<Doc<"files">["type"] | "all">("all");
 
   let orgId: string | undefined = undefined;
   if (organization.isLoaded && user.isLoaded) {
@@ -55,7 +64,13 @@ export function FileBrowser({
   const files = useQuery(
     api.files.getFiles,
     orgId
-      ? { orgId, query, favorites: favoritesOnly, delete: deleteOnly }
+      ? {
+          orgId,
+          type: type === "all" ? undefined : type,
+          query,
+          favorites: favoritesOnly,
+          delete: deleteOnly,
+        }
       : "skip"
   );
   const isLoading = files === undefined;
@@ -76,14 +91,38 @@ export function FileBrowser({
       </div>
 
       <Tabs defaultValue="list">
-        <TabsList className="mb-2">
-          <TabsTrigger value="list" className="flex gap-2 items-center">
-            <AlignJustify /> List
-          </TabsTrigger>
-          <TabsTrigger value="grid" className="flex gap-2 items-center">
-            <Grid2X2 /> Grid
-          </TabsTrigger>
-        </TabsList>
+        <div className="flex justify-between items-center">
+          <div>
+            <Select
+              value={type}
+              onValueChange={(newType) => {
+                setType(newType as any);
+              }}
+            >
+              <SelectTrigger className="w-[180px]" defaultValue={"all"}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="image">Image</SelectItem>
+                <SelectItem value="pdf">PDF</SelectItem>
+                <SelectItem value="csv">CSV</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <TabsList className="mb-2">
+            <TabsTrigger value="list" className="flex gap-2 items-center">
+              <AlignJustify className="w-5 h-5" />
+              {/* List */}
+            </TabsTrigger>
+            <TabsTrigger value="grid" className="flex gap-2 items-center">
+              <Grid2X2 className="w-5 h-5" />
+              {/* Grid */}
+            </TabsTrigger>
+          </TabsList>
+        </div>
+
         {isLoading ? (
           <div className="flex justify-center items-center mt-24 w-full">
             <div className="flex gap-3 items-center">
