@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { formatRelative} from "date-fns";
+import { formatRelative } from "date-fns";
 import { Doc } from "../../../../convex/_generated/dataModel";
 import {
   DropdownMenu,
@@ -44,9 +44,11 @@ import { Protect } from "@clerk/nextjs";
 
 function FileCardActions({
   file,
+  url,
   isFavorited,
 }: {
   file: Doc<"files">;
+  url: string;
   isFavorited: boolean;
 }) {
   const deleteFile = useMutation(api.files.deleteFile);
@@ -94,7 +96,7 @@ function FileCardActions({
         <DropdownMenuContent>
           <DropdownMenuItem
             onClick={() => {
-              window.open(file.url, "_blank");
+              window.open(url, "_blank");
             }}
             className="flex gap-2 items-center cursor-pointer"
           >
@@ -152,50 +154,58 @@ function FileCardActions({
 export function FileCard({
   file,
 }: {
-  file: Doc<"files"> & { isFavorited: boolean };
+  file: Doc<"files"> & { url: string | null; isFavorited: boolean };
 }) {
   const userProfile = useQuery(api.users.getUserProfile, {
     userId: file.userId,
   });
 
   const typeIcons = {
-    image: <Image alt={"pdf logo"} width="27" height="0" src="/picture.svg" />,
-    pdf: <Image alt={"pdf logo"} width="27" height="0" src="/pdf.svg" />,
-    csv: <Image alt={"pdf logo"} width="27" height="0" src="/unknown.svg" />,
+    image: <Image alt={"pdf logo"} width="23" height="0" src="/picture.svg" />,
+    pdf: <Image alt={"pdf logo"} width="23" height="0" src="/pdf.svg" />,
+    csv: <Image alt={"pdf logo"} width="23" height="0" src="/unknown.svg" />,
   } as Record<Doc<"files">["type"], ReactNode>;
 
   return (
-    <Card className="w-[330px]">
-      <CardHeader className="relative">
+    <Card className="bg-slate-100 hover:bg-slate-200">
+      <CardHeader className="relative pb-7 pt-3">
         <CardTitle className="flex justify-between">
-          <div className="flex gap-2 items-center text-base font-normal">
-            <div className="flex justify-center">{typeIcons[file.type]}</div>{" "}
-            {file.name}
+          <div className="flex gap-2 items-center text-sm font-medium">
+            <div>{typeIcons[file.type]}</div> {file.name}
           </div>
           <div className="flex items-center">
-            <FileCardActions isFavorited={file.isFavorited} file={file} />
+            <FileCardActions
+              file={file}
+              url={file.url ? file.url : ""}
+              isFavorited={file.isFavorited}
+            />
           </div>
         </CardTitle>
-        {/* <CardDescription>Card Description</CardDescription> */}
       </CardHeader>
-      <CardContent className="h-[230px] flex justify-center items-center">
+      <CardContent className="h-[150px] flex justify-center items-center pb-0">
         {file.type === "image" && (
-          <Image alt={file.name} width="200" height="100" src={file.url} />
+          <Image
+            alt={file.name}
+            width="245"
+            height="150"
+            src={file.url ? file.url : ""}
+          />
         )}
 
         {file.type === "csv" && <GanttChartIcon className="w-10 h-10" />}
         {file.type === "pdf" && <FileTextIcon className="w-10 h-10" />}
       </CardContent>
-      <CardFooter className="flex justify-between">
-        <div className="flex gap-2 text-xs text-gray-700 w-40 items-center">
+      <CardFooter className="flex justify-between pt-7">
+        <div className="flex gap-2 text-xs text-gray-700 w-50 items-center">
           <Avatar className="w-6 h-6">
             <AvatarImage src={userProfile?.image} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           {userProfile?.name}
         </div>
-        <div className="text-xs">
-          Uploaded on {formatRelative(new Date(file._creationTime), new Date())}
+        <div className="text-xs ml-[-30px]">
+          Uploaded on <br />{" "}
+          {formatRelative(new Date(file._creationTime), new Date())}
         </div>
       </CardFooter>
     </Card>

@@ -5,11 +5,12 @@ import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { FileCard } from "./file-card";
 import Image from "next/image";
-import { Loader2 } from "lucide-react";
+import { AlignJustify, Grid2X2, Loader2 } from "lucide-react";
 import { SearchBar } from "./search-bar";
 import { useState } from "react";
 import { DataTable } from "@/app/dashboard/_components/file-table";
 import { columns } from "@/app/dashboard/_components/columns";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 function Placeholder() {
   return (
@@ -67,38 +68,46 @@ export function FileBrowser({
       ),
     })) ?? [];
 
-  console.log(files);
-  console.log(modifiedFiles);
-
   return (
     <div>
-      {isLoading && (
-        <div className="flex justify-center items-center mt-24 w-full">
-          <div className="flex gap-3 items-center">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-300" />
-            <div className="text-md text-gray-400">Loading...</div>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-4xl font-bold">{title}</h1>
+        <SearchBar query={query} setQuery={setQuery} />
+      </div>
+
+      <Tabs defaultValue="list">
+        <TabsList className="mb-2">
+          <TabsTrigger value="list" className="flex gap-2 items-center">
+            <AlignJustify /> List
+          </TabsTrigger>
+          <TabsTrigger value="grid" className="flex gap-2 items-center">
+            <Grid2X2 /> Grid
+          </TabsTrigger>
+        </TabsList>
+        {isLoading ? (
+          <div className="flex justify-center items-center mt-24 w-full">
+            <div className="flex gap-3 items-center">
+              <Loader2 className="h-8 w-8 animate-spin text-gray-300" />
+              <div className="text-md text-gray-400">Loading...</div>
+            </div>
           </div>
-        </div>
-      )}
-
-      {!isLoading && (
-        <>
-          <div className="flex justify-between items-center mb-8">
-            <h1 className="text-4xl font-bold">{title}</h1>
-            <SearchBar query={query} setQuery={setQuery} />
-          </div>
-
-          {files.length === 0 && <Placeholder />}
-
-          <DataTable columns={columns} data={modifiedFiles} />
-
-          <div className="grid grid-cols-3 gap-4">
-            {modifiedFiles?.map((file) => {
-              return <FileCard key={file._id} file={file} />;
-            })}
-          </div>
-        </>
-      )}
+        ) : files?.length === 0 ? (
+          <Placeholder />
+        ) : (
+          <>
+            <TabsContent value="list">
+              <DataTable columns={columns} data={modifiedFiles} />
+            </TabsContent>
+            <TabsContent value="grid">
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-x-14 gap-y-4">
+                {modifiedFiles?.map((file) => {
+                  return <FileCard key={file._id} file={file} />;
+                })}
+              </div>
+            </TabsContent>
+          </>
+        )}
+      </Tabs>
     </div>
   );
 }
