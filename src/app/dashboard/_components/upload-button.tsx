@@ -116,7 +116,7 @@ export function UploadButton() {
       }}
     >
       <DialogTrigger asChild>
-        <Button className="flex gap-2 h-10 px-8 py-6" >
+        <Button className="flex gap-2 h-10 px-8 py-6 bg-indigo-600 hover:bg-indigo-500" >
           <FilePlus2 className="w-6 h-6" /> Upload File
         </Button>
       </DialogTrigger>

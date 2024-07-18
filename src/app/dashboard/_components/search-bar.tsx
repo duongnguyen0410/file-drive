@@ -58,7 +58,7 @@ export function SearchBar({
             size="sm"
             type="submit"
             disabled={form.formState.isSubmitting}
-            className="flex gap-1"
+            className="flex gap-1 bg-indigo-600 hover:bg-indigo-500"
           >
             {form.formState.isSubmitting && (
               <Loader2 className="h-4 w-4 animate-spin" />

@@ -1,9 +1,11 @@
 import { Button } from "@/components/ui/button";
+import { CustomUserButton } from "@/components/user-button";
 import {
   OrganizationSwitcher,
   SignedIn,
   SignedOut,
   SignInButton,
+  SignUpButton,
   UserButton,
 } from "@clerk/nextjs";
 import Image from "next/image";
@@ -27,12 +29,22 @@ export function Header() {
         <div className="flex gap-2">
           <SignedIn>
             <OrganizationSwitcher />
-            <UserButton />
+            <CustomUserButton />
           </SignedIn>
           <SignedOut>
             <SignInButton mode="modal">
-              <Button>Sign In</Button>
+              <Button className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                Sign In
+              </Button>
             </SignInButton>
+            <SignUpButton mode="modal">
+              <Button
+                variant={"outline"}
+                className="rounded-md bg-slate-200 px-3.5 py-2.5 text-sm font-semibold text-black shadow-sm hover:bg-slate-300"
+              >
+                Sign Up
+              </Button>
+            </SignUpButton>
           </SignedOut>
         </div>
       </div>

@@ -45,8 +45,7 @@ export function FileBrowser({
   title: string;
   favoritesOnly?: boolean;
   deleteOnly?: boolean;
-}) {
-  const organization = useOrganization();
+}) {  const organization = useOrganization();
   const user = useUser();
   const [query, setQuery] = useState("");
   const [type, setType] = useState<Doc<"files">["type"] | "all">("all");
@@ -76,12 +75,13 @@ export function FileBrowser({
   const isLoading = files === undefined;
 
   const modifiedFiles =
-    files?.map((file) => ({
-      ...file,
-      isFavorited: (favorites ?? []).some(
-        (favorite) => favorite.fileId === file._id
-      ),
-    })) ?? [];
+      files?.map((file) => ({
+        ...file,
+        isFavorited: (favorites ?? []).some(
+          (favorite) => favorite.fileId === file._id
+        ),
+        url: file.url ?? undefined,
+      })) ?? [];
 
   return (
     <div>

@@ -32,9 +32,11 @@ import { Protect } from "@clerk/nextjs";
 
 export function FileCardActions({
   file,
+  url,
   isFavorited,
 }: {
   file: Doc<"files">;
+  url: string;
   isFavorited: boolean;
 }) {
   const deleteFile = useMutation(api.files.deleteFile);
@@ -82,7 +84,7 @@ export function FileCardActions({
         <DropdownMenuContent>
           <DropdownMenuItem
             onClick={() => {
-              window.open(file.url, "_blank");
+              window.open(url, "_blank");
             }}
             className="flex gap-2 items-center cursor-pointer"
           >

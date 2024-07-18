@@ -68,6 +68,17 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+
+    cl-avatarImage {
+      width: 2.75rem;
+      height: 2.75rem;
+    }
+
+    cl-userButtonAvatarImage {
+      width: 10.5rem;
+      height: 10.5rem;
+    
+    }
   }
 }
 

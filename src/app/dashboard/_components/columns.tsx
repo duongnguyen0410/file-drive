@@ -40,7 +40,7 @@ function UserCell({ userId }: { userId: Id<"users"> }) {
   );
 }
 
-export const columns: ColumnDef<Doc<"files"> & { isFavorited: boolean }>[] = [
+export const columns: ColumnDef<Doc<"files"> & { isFavorited: boolean; url?: string }>[] = [
   {
     accessorKey: "Name",
     cell: ({ row }) => {
@@ -70,6 +70,7 @@ export const columns: ColumnDef<Doc<"files"> & { isFavorited: boolean }>[] = [
         <div className="text-right">
           <FileCardActions
             file={row.original}
+            url={row.original.url ?? ""}
             isFavorited={row.original.isFavorited}
           />
         </div>

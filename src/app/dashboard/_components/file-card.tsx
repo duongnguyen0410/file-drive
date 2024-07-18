@@ -5,8 +5,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { formatRelative } from "date-fns";
 import { Doc } from "../../../../convex/_generated/dataModel";
 import {
   DropdownMenu,
@@ -154,7 +152,7 @@ function FileCardActions({
 export function FileCard({
   file,
 }: {
-  file: Doc<"files"> & { url: string | null; isFavorited: boolean };
+  file: Doc<"files"> & { url: string | undefined; isFavorited: boolean };
 }) {
   const userProfile = useQuery(api.users.getUserProfile, {
     userId: file.userId,
@@ -195,8 +193,8 @@ export function FileCard({
         {file.type === "csv" && <GanttChartIcon className="w-10 h-10" />}
         {file.type === "pdf" && <FileTextIcon className="w-10 h-10" />}
       </CardContent>
-      <CardFooter className="flex justify-between pt-7">
-        <div className="flex gap-2 text-xs text-gray-700 w-50 items-center">
+      <CardFooter className="flex justify-between pt-0">
+        {/* <div className="flex gap-2 text-xs text-gray-700 w-50 items-center">
           <Avatar className="w-6 h-6">
             <AvatarImage src={userProfile?.image} />
             <AvatarFallback>CN</AvatarFallback>
@@ -206,7 +204,7 @@ export function FileCard({
         <div className="text-xs ml-[-30px]">
           Uploaded on <br />{" "}
           {formatRelative(new Date(file._creationTime), new Date())}
-        </div>
+        </div> */}
       </CardFooter>
     </Card>
   );
